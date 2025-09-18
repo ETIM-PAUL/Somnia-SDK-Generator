@@ -215,6 +215,10 @@ const SDKConfiguration = () => {
 
   const canProceed = selectedLanguages?.length > 0 && !isGenerating;
 
+  if (!state?.name) {
+    navigate("/")
+  }
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -333,7 +337,7 @@ const SDKConfiguration = () => {
 
                 {showAnalysis && (
                   <div className="mt-6">
-                    <ContractAnalysisResults analysis={contractAnalysis} />
+                    <ContractAnalysisResults analysis={contractAnalysis} ai_Analysis={state} />
                   </div>
                 )}
               </section>

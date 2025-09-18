@@ -1,7 +1,7 @@
 import React from 'react';
 import Icon from '../../../components/AppIcon';
 
-const ContractAnalysisResults = ({ analysis }) => {
+const ContractAnalysisResults = ({ analysis, ai_Analysis }) => {
   const performanceMetrics = [
     {
       label: 'Finality Time',
@@ -19,68 +19,17 @@ const ContractAnalysisResults = ({ analysis }) => {
     },
     {
       label: 'Function Coverage',
-      value: `${analysis?.functionCount || 12}/12`,
+      value: `${ai_Analysis?.functions?.length$}/${ai_Analysis?.functions?.length}`,
       icon: 'CheckCircle2',
       status: 'excellent',
       description: 'All functions accessible'
     },
     {
       label: 'Security Score',
-      value: analysis?.securityScore || '9.2/10',
+      value: ai_Analysis?.analysis?.securityScore || '9.2/10',
       icon: 'Shield',
       status: 'excellent',
       description: 'High security rating'
-    }
-  ];
-
-  const functionSignatures = analysis?.functions || [
-    {
-      name: 'transfer',
-      signature: 'transfer(address,uint256)',
-      gasEstimate: '21,000',
-      visibility: 'public'
-    },
-    {
-      name: 'approve',
-      signature: 'approve(address,uint256)',
-      gasEstimate: '46,000',
-      visibility: 'public'
-    },
-    {
-      name: 'balanceOf',
-      signature: 'balanceOf(address)',
-      gasEstimate: '2,300',
-      visibility: 'view'
-    },
-    {
-      name: 'totalSupply',
-      signature: 'totalSupply()',
-      gasEstimate: '2,300',
-      visibility: 'view'
-    }
-  ];
-
-  const optimizationRecommendations = analysis?.recommendations || [
-    {
-      type: 'gas',
-      title: 'Batch Operations',
-      description: 'Consider implementing batch transfer functions to reduce gas costs for multiple operations',
-      impact: 'medium',
-      savings: '~30% gas reduction'
-    },
-    {
-      type: 'performance',
-      title: 'Event Optimization',
-      description: 'Optimize event emissions for better indexing performance on Somnia network',
-      impact: 'low',
-      savings: '~5% improvement'
-    },
-    {
-      type: 'security',
-      title: 'Access Control',
-      description: 'Consider implementing role-based access control for administrative functions',
-      impact: 'high',
-      savings: 'Enhanced security'
     }
   ];
 
@@ -112,6 +61,7 @@ const ContractAnalysisResults = ({ analysis }) => {
       default: return 'text-muted-foreground';
     }
   };
+
 
   return (
     <div className="space-y-6">
@@ -170,7 +120,7 @@ const ContractAnalysisResults = ({ analysis }) => {
                 </tr>
               </thead>
               <tbody>
-                {functionSignatures?.map((func, index) => (
+                {ai_Analysis?.analysis?.function_details?.map((func, index) => (
                   <tr key={index} className="border-t border-border hover:bg-muted/50">
                     <td className="p-3">
                       <span className="font-medium text-foreground">{func?.name}</span>
@@ -207,19 +157,19 @@ const ContractAnalysisResults = ({ analysis }) => {
         </h3>
         
         <div className="space-y-3">
-          {optimizationRecommendations?.map((rec, index) => (
+          {ai_Analysis?.analysis?.optimization_recommendations?.map((rec, index) => (
             <div key={index} className="bg-card border border-border rounded-lg p-4">
               <div className="flex items-start space-x-3">
                 <div className={`
                   w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0
-                  ${rec?.type === 'gas' ?'bg-warning/10 border border-warning/20'
-                    : rec?.type === 'performance' ?'bg-primary/10 border border-primary/20' :'bg-error/10 border border-error/20'
+                  ${Number(rec?.impact_percentage) < 3 ?'bg-warning/10 border border-warning/20'
+                    : Number(rec?.impact_percentage) <=5 ?'bg-primary/10 border border-primary/20' :'bg-error/10 border border-error/20'
                   }
                 `}>
                   <Icon 
-                    name={rec?.type === 'gas' ? 'Zap' : rec?.type === 'performance' ? 'TrendingUp' : 'Shield'} 
+                    name={Number(rec?.impact_percentage) < 3 ? 'Zap' : Number(rec?.impact_percentage) <= 5 ? 'TrendingUp' : 'Shield'} 
                     size={16} 
-                    color={`var(--color-${rec?.type === 'gas' ? 'warning' : rec?.type === 'performance' ? 'primary' : 'error'})`}
+                    color={`var(--color-${Number(rec?.impact_percentage) < 3 ? 'warning' : Number(rec?.impact_percentage) <= 5 ? 'primary' : 'error'})`}
                   />
                 </div>
                 
@@ -231,7 +181,51 @@ const ContractAnalysisResults = ({ analysis }) => {
                         {rec?.impact?.toUpperCase()} IMPACT
                       </span>
                       <span className="text-xs text-success font-medium">
-                        {rec?.savings}
+                        {rec?.impact_percentage}
+                      </span>
+                    </div>
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    {rec?.description}
+                  </p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Optimization Recommendations */}
+      <div>
+        <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center space-x-2">
+          <Icon name="Lightbulb" size={20} color="var(--color-primary)" />
+          <span>Security Recommendations</span>
+        </h3>
+        
+        <div className="space-y-3">
+          {ai_Analysis?.analysis?.security_recommendations?.map((rec, index) => (
+            <div key={index} className="bg-card border border-border rounded-lg p-4">
+              <div className="flex items-start space-x-3">
+                <div className={`
+                  w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0
+                  ${'bg-primary/10 border border-primary/20'}
+                `}>
+                  <Icon 
+                    name={'Shield'} 
+                    size={16} 
+                    color={`var(--color-primary)`}
+                  />
+                </div>
+                
+                <div className="flex-1">
+                  <div className="flex items-center justify-between mb-1">
+                    <h4 className="font-medium text-foreground">{rec?.title}</h4>
+                    <div className="flex items-center space-x-2">
+                      <span className={`text-xs font-medium ${getImpactColor(rec?.impact)}`}>
+                        {rec?.impact?.toUpperCase()} IMPACT
+                      </span>
+                      <span className="text-xs text-success font-medium">
+                        {rec?.impact_percentage}
                       </span>
                     </div>
                   </div>

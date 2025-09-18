@@ -12,6 +12,7 @@ import Icon from '../../components/AppIcon';
 import Button from '../../components/ui/Button';
 import { isContractVerified } from 'utils';
 import { ContractContext } from 'context/globalState';
+import { HuggingFaceContractAnalyzer } from 'utils/huggingFace';
 
 const ContractInputDashboard = () => {
   const navigate = useNavigate();
@@ -47,7 +48,8 @@ const ContractInputDashboard = () => {
       await new Promise(resolve => setTimeout(resolve, 1000));
 
       const contractDetails = await isContractVerified(contractAddress);
-      console.log("details", contractDetails)
+      const contractAnalysis = await HuggingFaceContractAnalyzer(contractCode);
+      console.log("contractAnalysis", contractAnalysis)
 
       // Mock validation results
       const mockResults = {
@@ -114,6 +116,7 @@ const ContractInputDashboard = () => {
           functions: (contractCode?.match(/function/g) || [])?.length,
           events: (contractCode?.match(/event/g) || [])?.length,
           name: contractDetails?.contractName,
+          analysis: contractAnalysis
         };
     
         dispatch({ type: "SET_CONTRACT_DETAILS", payload: newDetails });
@@ -361,3 +364,4 @@ const ContractInputDashboard = () => {
 };
 
 export default ContractInputDashboard;
+

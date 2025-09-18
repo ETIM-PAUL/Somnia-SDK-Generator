@@ -98,3 +98,21 @@ console.log("local", localBytecode)
   return deployedBytecode === localBytecode.toLowerCase();
 }
 
+export function extractOutermostObject(text) {
+  // Find the first '{' and last '}' in the string
+  const start = text.indexOf('{');
+  const end = text.lastIndexOf('}');
+  if (start === -1 || end === -1 || end <= start) {
+    console.error("No JSON object found in text");
+    return null;
+  }
+
+  const jsonString = text.slice(start, end + 1);
+
+  try {
+    return JSON.parse(jsonString);
+  } catch (err) {
+    console.error("Failed to parse JSON:", err.message);
+    return null;
+  }
+}
