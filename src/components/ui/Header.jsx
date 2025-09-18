@@ -10,7 +10,7 @@ const Header = () => {
   const navigationItems = [
     {
       name: 'Contract Input',
-      path: '/contract-input-dashboard',
+      path: '/',
       icon: 'FileCode',
       description: 'Smart contract validation and verification'
     },

@@ -1,6 +1,7 @@
 import React from 'react';
 import Icon from '../../../components/AppIcon';
 import Button from '../../../components/ui/Button';
+import { useNavigate } from 'react-router-dom';
 
 const ContractValidationPanel = ({ 
   validationResults, 
@@ -8,12 +9,15 @@ const ContractValidationPanel = ({
   onValidate, 
   onRetry 
 }) => {
+  const navigate = useNavigate();
+
   const getStatusIcon = (status) => {
     switch (status) {
       case 'success': return 'CheckCircle2';
       case 'error': return 'AlertCircle';
       case 'warning': return 'AlertTriangle';
       case 'pending': return 'Clock';
+      case 'proceed': return 'Plus';
       default: return 'Minus';
     }
   };
@@ -207,6 +211,20 @@ const ContractValidationPanel = ({
           </div>
         </div>
       )}
+
+      {validationResults &&
+        <Button
+            variant={overallStatus === 'success' ? 'success' : 'default'}
+            size="sm"
+            onClick={() => navigate("/sdk-configuration")}
+            iconName={'ArrowRight'}
+            iconPosition="right"
+          >
+            {isValidating ? 'Validating...' : 
+             overallStatus === 'success' ? 'Re-validate' : 'SDK Configuration'}
+          </Button>
+      }
+
     </div>
   );
 };

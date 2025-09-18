@@ -5,9 +5,11 @@ import ErrorBoundary from "components/ErrorBoundary";
 import NotFound from "pages/NotFound";
 import ContractInputDashboard from './pages/contract-input-dashboard';
 import SDKConfiguration from './pages/sdk-configuration';
+import { ContractProvider } from "context/globalState";
 
 const Routes = () => {
   return (
+    <ContractProvider>
     <BrowserRouter>
       <ErrorBoundary>
       <ScrollToTop />
@@ -19,6 +21,7 @@ const Routes = () => {
       </RouterRoutes>
       </ErrorBoundary>
     </BrowserRouter>
+    </ContractProvider>
   );
 };
 

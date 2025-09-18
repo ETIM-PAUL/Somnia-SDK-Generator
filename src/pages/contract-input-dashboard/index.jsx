@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../../components/ui/Header';
 import StepProgressIndicator from '../../components/ui/StepProgressIndicator';
@@ -10,10 +10,12 @@ import ContractValidationPanel from './components/ContractValidationPanel';
 import ValidationToast from './components/ValidationToast';
 import Icon from '../../components/AppIcon';
 import Button from '../../components/ui/Button';
-import { doesContractCodeMatch, isContractVerified } from 'utils';
+import { isContractVerified } from 'utils';
+import { ContractContext } from 'context/globalState';
 
 const ContractInputDashboard = () => {
   const navigate = useNavigate();
+  const { state, dispatch } = useContext(ContractContext); 
   
   // Form state
   const [contractAddress, setContractAddress] = useState('');
@@ -46,8 +48,7 @@ const ContractInputDashboard = () => {
 
       const contractDetails = await isContractVerified(contractAddress);
       console.log("details", contractDetails)
-      // const isCodeMatch = await doesContractCodeMatch(contractAddress, contractCode, contractDetails.compilerVersion);
-      
+
       // Mock validation results
       const mockResults = {
         deployment: {
@@ -105,7 +106,19 @@ const ContractInputDashboard = () => {
           message: 'Contract successfully validated and ready for SDK generation.' 
         });
         showToast('success', 'Validation Successful', 'Contract is ready for SDK generation');
+        const newDetails = {
+          address: contractAddress,
+          code: contractCode,
+          abi: contractDetails.abi,
+          size: (contractCode?.length / 1024)?.toFixed(2),
+          functions: (contractCode?.match(/function/g) || [])?.length,
+          events: (contractCode?.match(/event/g) || [])?.length,
+          name: contractDetails?.contractName,
+        };
+    
+        dispatch({ type: "SET_CONTRACT_DETAILS", payload: newDetails });
       }
+
 
     } catch (error) {
       console.log("error", error);
@@ -279,6 +292,7 @@ const ContractInputDashboard = () => {
                   isValidating={isValidating}
                   onValidate={performContractValidation}
                   onRetry={handleRetryValidation}
+                  contractCode={contractCode}
                 />
               </div>
             </div>
