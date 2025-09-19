@@ -1,107 +1,182 @@
-# React
+# Somnia SDK Generator 🚀
 
-A modern React-based project utilizing the latest frontend technologies and tools for building responsive web applications.
+An intelligent SDK generator for Somnia blockchain that leverages AI to analyze smart contracts, generate optimized TypeScript/JavaScript SDKs with comprehensive documentation and type safety and publish your smart contract SDK.
 
-## 🚀 Features
+## 🌟 Features
 
-- **React 18** - React version with improved rendering and concurrent features
-- **Vite** - Lightning-fast build tool and development server
-- **Redux Toolkit** - State management with simplified Redux setup
-- **TailwindCSS** - Utility-first CSS framework with extensive customization
-- **React Router v6** - Declarative routing for React applications
-- **Data Visualization** - Integrated D3.js and Recharts for powerful data visualization
-- **Form Management** - React Hook Form for efficient form handling
-- **Animation** - Framer Motion for smooth UI animations
-- **Testing** - Jest and React Testing Library setup
+- **AI-Powered Contract Analysis**: Uses Hugging Face AI models to analyze smart contract code and optimize SDK generation
+- **Automatic Type Generation**: Creates fully typed TypeScript interfaces from Solidity contracts
+- **Optimized Function Calls**: Intelligent gas estimation and transaction optimization
+- **Comprehensive Documentation**: Auto-generated documentation with examples and usage guides
+- **Somnia Testnet Network Support**: Works with Somnia testnet network
+- **React Hooks Integration**: Pre-built React hooks for seamless frontend integration
+- **Error Handling**: Robust error handling with user-friendly error messages
+- **Testing Suite**: Automated test generation for all contract functions
+
+## 🤖 AI Integration
+
+This project leverages **Hugging Face AI** for intelligent contract analysis and optimization:
+
+- **Contract Code Analysis**: AI models analyze Solidity code to understand contract structure and functionality
+- **Gas Optimization**: AI suggests optimal gas limits and transaction parameters
+- **Documentation Generation**: Natural language processing generates comprehensive documentation
+- **Code Quality Enhancement**: AI reviews generated SDK code for best practices and optimization opportunities
+- **Type Safety Improvement**: Intelligent type inference for complex contract interactions for Typescript SDK
+
 
 ## 📋 Prerequisites
 
-- Node.js (v14.x or higher)
+- Node.js 16+ 
 - npm or yarn
+- Valid Somnia RPC endpoint
+- Hugging Face API key (for AI features)
 
-## 🛠️ Installation
+## ⚙️ Configuration
 
-1. Install dependencies:
-   ```bash
-   npm install
-   # or
-   yarn install
-   ```
-   
-2. Start the development server:
-   ```bash
-   npm start
-   # or
-   yarn start
-   ```
-
-## 📁 Project Structure
+Create a `.env` file in your project root:
 
 ```
-react_app/
-├── public/             # Static assets
-├── src/
-│   ├── components/     # Reusable UI components
-│   ├── pages/          # Page components
-│   ├── styles/         # Global styles and Tailwind configuration
-│   ├── App.jsx         # Main application component
-│   ├── Routes.jsx      # Application routes
-│   └── index.jsx       # Application entry point
-├── .env                # Environment variables
-├── index.html          # HTML template
-├── package.json        # Project dependencies and scripts
-├── tailwind.config.js  # Tailwind CSS configuration
-└── vite.config.js      # Vite configuration
+VITE_HUGGINGFACE_API="your_key"
 ```
 
-## 🧩 Adding Routes
+## 📁 Generated SDK Structure
 
-To add new routes to the application, update the `Routes.jsx` file:
+```
+generated-sdk/
+├── contracts/
+│   ├── contractName.sol/           # Contract type definitions
+│   └── index.js            # Main export
+├── docs/                   # Auto-generated documentation
+├── package.json
+└── README.md
+```
 
-```jsx
-import { useRoutes } from "react-router-dom";
-import HomePage from "pages/HomePage";
-import AboutPage from "pages/AboutPage";
+## 🧪 AI-Powered Features
 
-const ProjectRoutes = () => {
-  let element = useRoutes([
-    { path: "/", element: <HomePage /> },
-    { path: "/about", element: <AboutPage /> },
-    // Add more routes as needed
-  ]);
+### Contract Analysis
 
-  return element;
+The AI analyzes your contract and provides:
+
+- **Function Classification**: Identifies read/write functions, payable functions, events
+- **Gas Optimization**: Suggests optimal gas limits for each function
+- **Security Analysis**: Identifies potential security issues and suggests improvements
+- **Integration Patterns**: Recommends best practices for frontend integration
+
+### Documentation Generation
+
+AI generates comprehensive documentation including:
+
+- **Function Descriptions**: Natural language descriptions of what each function does
+- **Parameter Explanations**: Detailed parameter descriptions and types
+- **Usage Examples**: Real-world usage examples for each function
+- **Integration Guides**: Step-by-step integration guides
+
+### Code Optimization
+
+The AI optimizer provides:
+
+- **Type Safety**: Enhanced TypeScript types for better developer experience
+- **Error Handling**: Intelligent error handling with descriptive messages
+- **Performance**: Optimized function calls and batch operations
+- **Best Practices**: Following Ethereum and Somnia best practices
+
+## 🔧 Advanced Configuration
+
+### Custom AI Models
+
+```javascript
+// somnia-sdk.config.js
+module.exports = {
+  ai: {
+    models: {
+      codeAnalysis: 'Qwen/Qwen3-32B',
+    }
+  }
 };
 ```
 
-## 🎨 Styling
 
-This project uses Tailwind CSS for styling. The configuration includes:
+## 🤝 Contributing
 
-- Forms plugin for form styling
-- Typography plugin for text styling
-- Aspect ratio plugin for responsive elements
-- Container queries for component-specific responsive design
-- Fluid typography for responsive text
-- Animation utilities
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
 
-## 📱 Responsive Design
-
-The app is built with responsive design using Tailwind CSS breakpoints.
-
-
-## 📦 Deployment
-
-Build the application for production:
+### Development Setup
 
 ```bash
-npm run build
+git clone https://github.com/your-repo/somnia-sdk-generator.git
+cd somnia-sdk-generator
+npm install
+npm run dev
 ```
+
+## 📝 API Reference
+
+### SomniaSDK Class
+
+```typescript
+class SomniaSDK {
+  constructor(config: SomniaConfig);
+  
+  // Contract interaction methods
+  async call(method: string, params: any[]): Promise<any>;
+  async send(method: string, params: any[], options?: TxOptions): Promise<TransactionResponse>;
+  
+  // Utility methods
+  async getGasEstimate(method: string, params: any[]): Promise<BigNumber>;
+  async getBalance(address: string): Promise<BigNumber>;
+}
+```
+
+### React Hooks
+
+```typescript
+// Read contract data
+function useContract<T>(method: string, params: any[]): {
+  data: T | undefined;
+  loading: boolean;
+  error: Error | null;
+  refetch: () => void;
+}
+
+// Write to contract
+function useContractWrite(method: string): {
+  write: (params: any[], options?: TxOptions) => Promise<TransactionResponse>;
+  loading: boolean;
+  error: Error | null;
+}
+```
+
+## 🐛 Troubleshooting
+
+### Common Issues
+
+**Q: AI features not working**
+A: Ensure your Hugging Face API key is set correctly in the configuration or environment variables.
+
+**Q: Generated SDK compilation errors**
+A: Check that your contract ABI is valid and all dependencies are installed.
+
+**Q: Network connection issues**
+A: Verify your RPC URL is correct and accessible.
+
+## 📄 License
+
+MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 🙏 Acknowledgments
 
-- Built with [Rocket.new](https://rocket.new)
-- Powered by React and Vite
-- Styled with Tailwind CSS
+- [Hugging Face](https://huggingface.co/) for providing the AI models used in contract analysis and optimization
+- [Somnia](https://somnia.network/) team for the amazing blockchain infrastructure
+- [Ethers.js](https://ethers.org/) for the excellent Ethereum interaction library
 
-Built with ❤️ on Rocket.new
+## 📞 Support
+
+- 📧 Email: etimpaul22@gmail.com
+- 🐛 Issues: [GitHub Issues](https://github.com/ETIM-PAUL/Somnia-SDK-Generator/issues)
+- 📖 Docs: [Full Documentation](https://docs.somnia-sdk.dev)
+
+---
+
+**Made with ❤️ for the Somnia ecosystem**
+
+*Powered by AI • Built for developers • Optimized for production*
