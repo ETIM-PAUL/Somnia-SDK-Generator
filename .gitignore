@@ -5,4 +5,5 @@ package-lock.json
 /build
 .vscode/
 .idea/
+.env
 vite.config.*s.*
