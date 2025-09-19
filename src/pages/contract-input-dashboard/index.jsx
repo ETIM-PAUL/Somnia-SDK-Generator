@@ -116,7 +116,7 @@ const ContractInputDashboard = () => {
           functions: (contractCode?.match(/function/g) || [])?.length,
           events: (contractCode?.match(/event/g) || [])?.length,
           name: contractDetails?.contractName,
-          analysis: contractAnalysis
+          analysis: contractAnalysis?.analysis
         };
     
         dispatch({ type: "SET_CONTRACT_DETAILS", payload: newDetails });

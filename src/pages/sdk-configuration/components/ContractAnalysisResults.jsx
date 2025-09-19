@@ -2,6 +2,7 @@ import React from 'react';
 import Icon from '../../../components/AppIcon';
 
 const ContractAnalysisResults = ({ analysis, ai_Analysis }) => {
+  console.log(ai_Analysis)
   const performanceMetrics = [
     {
       label: 'Finality Time',

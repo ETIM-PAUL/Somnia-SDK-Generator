@@ -20,28 +20,12 @@ const ContractAddressInput = ({ value, onChange, onValidation, isValidating }) =
         message: 'Invalid address format. Must be a valid Somnia testnet address (0x...)' 
       };
     }
-
-    // Mock validation - in real app, this would call Somnia testnet API
-    const mockValidAddresses = [
-      '0x742d35Cc6634C0532925a3b8D4C9db7C4C0C0C0C',
-      '0x1234567890123456789012345678901234567890',
-      '0xabcdefabcdefabcdefabcdefabcdefabcdefabcd'
-    ];
-
-    // if (mockValidAddresses?.includes(address)) {
-    //   return { isValid: true, message: 'Contract found on Somnia testnet' };
-    // } else {
-    //   return { 
-    //     isValid: false, 
-    //     message: 'Contract not found on Somnia testnet. Please verify the address.' 
-    //   };
-    // }
   };
 
   useEffect(() => {
     if (value) {
       const validation = validateSomniaAddress(value);
-      setValidationStatus(validation?.isValid ? 'success' : 'error');
+      setValidationStatus(validation?.isValid ? 'success' : validation?.isValid === undefined ? 'success' : 'error');
       setValidationMessage(validation?.message);
       
       if (onValidation) {

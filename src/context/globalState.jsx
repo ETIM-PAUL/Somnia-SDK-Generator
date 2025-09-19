@@ -10,7 +10,7 @@ const initialState = {
   functions: [],
   events: [],
   name: "",
-  anaylysis: {}
+  analysis: {}
 };
 
 // Reducer function
