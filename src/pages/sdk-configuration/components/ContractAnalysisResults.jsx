@@ -2,7 +2,6 @@ import React from 'react';
 import Icon from '../../../components/AppIcon';
 
 const ContractAnalysisResults = ({ analysis, ai_Analysis }) => {
-  console.log(ai_Analysis)
   const performanceMetrics = [
     {
       label: 'Finality Time',
@@ -20,14 +19,14 @@ const ContractAnalysisResults = ({ analysis, ai_Analysis }) => {
     },
     {
       label: 'Function Coverage',
-      value: `${ai_Analysis?.functions?.length$}/${ai_Analysis?.functions?.length}`,
+      value: `${ai_Analysis?.analysis?.function_details?.length}/${ai_Analysis?.analysis?.function_details?.length}`,
       icon: 'CheckCircle2',
       status: 'excellent',
-      description: 'All functions accessible'
+      description: `${ai_Analysis?.analysis?.function_details.filter((i,k) => i?.visibility === "public").length + ' functions accessible'}`
     },
     {
       label: 'Security Score',
-      value: ai_Analysis?.analysis?.securityScore || '9.2/10',
+      value: (ai_Analysis?.analysis?.security_score)+'/100' || '9.2/10',
       icon: 'Shield',
       status: 'excellent',
       description: 'High security rating'
@@ -62,7 +61,6 @@ const ContractAnalysisResults = ({ analysis, ai_Analysis }) => {
       default: return 'text-muted-foreground';
     }
   };
-
 
   return (
     <div className="space-y-6">
@@ -182,7 +180,7 @@ const ContractAnalysisResults = ({ analysis, ai_Analysis }) => {
                         {rec?.impact?.toUpperCase()} IMPACT
                       </span>
                       <span className="text-xs text-success font-medium">
-                        {rec?.impact_percentage}
+                      ~{rec?.impact_percentage}% improvement
                       </span>
                     </div>
                   </div>
@@ -226,7 +224,7 @@ const ContractAnalysisResults = ({ analysis, ai_Analysis }) => {
                         {rec?.impact?.toUpperCase()} IMPACT
                       </span>
                       <span className="text-xs text-success font-medium">
-                        {rec?.impact_percentage}
+                      ~{rec?.impact_percentage}% Enhanced security
                       </span>
                     </div>
                   </div>

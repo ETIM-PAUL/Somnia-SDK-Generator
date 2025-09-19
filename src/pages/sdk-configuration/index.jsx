@@ -184,33 +184,35 @@ const SDKConfiguration = () => {
       });
       return;
     }
+    dispatch({ type: "SET_SELECTED_LANGS", payload: selectedLanguages });
+    dispatch({ type: "SET_CONFIG", payload: config });
+    navigate("/sdk-generation")
+    // setIsGenerating(true);
+    // setValidationStatus({
+    //   type: 'loading',
+    //   title: 'Generating SDKs',
+    //   message: `Creating ${selectedLanguages?.length} SDK${selectedLanguages?.length > 1 ? 's' : ''} for your smart contract...`,
+    //   persistent: true
+    // });
 
-    setIsGenerating(true);
-    setValidationStatus({
-      type: 'loading',
-      title: 'Generating SDKs',
-      message: `Creating ${selectedLanguages?.length} SDK${selectedLanguages?.length > 1 ? 's' : ''} for your smart contract...`,
-      persistent: true
-    });
-
-    // Simulate SDK generation process
-    setTimeout(() => {
-      setIsGenerating(false);
-      setValidationStatus({
-        type: 'success',
-        title: 'SDKs Generated Successfully',
-        message: `${selectedLanguages?.length} SDK${selectedLanguages?.length > 1 ? 's' : ''} have been created and are ready for download.`,
-        isDismissible: true,
-        action: {
-          label: 'Download SDKs',
-          icon: 'Download',
-          onClick: () => {
-            // Navigate to generation/download page
-            navigate('/generation');
-          }
-        }
-      });
-    }, 3000);
+    // // Simulate SDK generation process
+    // setTimeout(() => {
+    //   setIsGenerating(false);
+    //   setValidationStatus({
+    //     type: 'success',
+    //     title: 'SDKs Generated Successfully',
+    //     message: `${selectedLanguages?.length} SDK${selectedLanguages?.length > 1 ? 's' : ''} have been created and are ready for download.`,
+    //     isDismissible: true,
+    //     action: {
+    //       label: 'Download SDKs',
+    //       icon: 'Download',
+    //       onClick: () => {
+    //         // Navigate to generation/download page
+    //         navigate('/generation');
+    //       }
+    //     }
+    //   });
+    // }, 3000);
   };
 
   const canProceed = selectedLanguages?.length > 0 && !isGenerating;

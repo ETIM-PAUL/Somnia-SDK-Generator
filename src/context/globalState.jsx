@@ -10,7 +10,10 @@ const initialState = {
   functions: [],
   events: [],
   name: "",
-  analysis: {}
+  auto_publish: false,
+  selectedLanguages: [],
+  analysis: {},
+  config: {}
 };
 
 // Reducer function
@@ -23,6 +26,21 @@ const contractReducer = (state, action) => {
       };
     case "RESET_CONTRACT_DETAILS":
       return initialState;
+    case "SET_AUTO_PUBLISH": // Add new action type
+      return {
+      ...state,
+      auto_publish: action.payload,
+      };
+    case "SET_SELECTED_LANGS": // Add new action type
+      return {
+        ...state,
+        selectedLanguages: action.payload,
+      };
+    case "SET_CONFIG": // Add new action type
+      return {
+        ...state,
+        config: action.payload,
+      };
     default:
       return state;
   }

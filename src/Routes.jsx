@@ -6,6 +6,7 @@ import NotFound from "pages/NotFound";
 import ContractInputDashboard from './pages/contract-input-dashboard';
 import SDKConfiguration from './pages/sdk-configuration';
 import { ContractProvider } from "context/globalState";
+import SDKGenerationProgress from "pages/sdk-generation-progress";
 
 const Routes = () => {
   return (
@@ -17,6 +18,8 @@ const Routes = () => {
         {/* Define your route here */}
         <Route path="/" element={<ContractInputDashboard />} />
         <Route path="/sdk-configuration" element={<SDKConfiguration />} />
+        <Route path="/sdk-generation" element={<SDKGenerationProgress />} />
+        <Route path="/sdk-preview-and-download" element={<SDKGenerationProgress />} />
         <Route path="*" element={<NotFound />} />
       </RouterRoutes>
       </ErrorBoundary>
