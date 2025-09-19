@@ -6,6 +6,7 @@ const DownloadManager = ({
   availablePackages = [],
   downloadProgress = {},
   onDownload = () => {},
+  state,
   isGenerating = false 
 }) => {
   const [selectedPackages, setSelectedPackages] = useState(new Set());
@@ -22,37 +23,37 @@ const DownloadManager = ({
       name: 'JavaScript SDK',
       description: 'Complete JavaScript/Node.js SDK package',
       format: 'npm',
-      size: '2.4 MB',
+      size: 'proposed size - 2.4 MB',
       icon: 'FileText',
       language: 'javascript',
-      files: ['package.json', 'index.js', 'contracts/', 'README.md', 'types/']
+      files: ['package.json', 'index.js', 'contracts/', 'README.md']
     },
-    {
-      id: 'typescript-sdk',
-      name: 'TypeScript SDK',
-      description: 'TypeScript SDK with full type definitions',
-      format: 'npm',
-      size: '3.1 MB',
-      icon: 'FileCode',
-      language: 'typescript',
-      files: ['package.json', 'index.ts', 'contracts/', 'README.md', 'types/']
-    },
-    {
-      id: 'python-sdk',
-      name: 'Python SDK',
-      description: 'Python package with pip installation support',
-      format: 'pip',
-      size: '1.8 MB',
-      icon: 'Package',
-      language: 'python',
-      files: ['setup.py', 'somnia_sdk/', 'README.md', 'requirements.txt']
-    },
+    // {
+    //   id: 'typescript-sdk',
+    //   name: 'TypeScript SDK',
+    //   description: 'TypeScript SDK with full type definitions',
+    //   format: 'npm',
+    //   size: '3.1 MB',
+    //   icon: 'FileCode',
+    //   language: 'typescript',
+    //   files: ['package.json', 'index.ts', 'contracts/', 'README.md', 'types/']
+    // },
+    // {
+    //   id: 'python-sdk',
+    //   name: 'Python SDK',
+    //   description: 'Python package with pip installation support',
+    //   format: 'pip',
+    //   size: '1.8 MB',
+    //   icon: 'Package',
+    //   language: 'python',
+    //   files: ['setup.py', 'somnia_sdk/', 'README.md', 'requirements.txt']
+    // },
     {
       id: 'documentation',
       name: 'Documentation',
       description: 'Complete API documentation and examples',
       format: 'zip',
-      size: '5.2 MB',
+      size: 'proposed size - 5.2 MB',
       icon: 'BookOpen',
       language: 'markdown',
       files: ['docs/', 'examples/', 'README.md']
@@ -204,12 +205,12 @@ const DownloadManager = ({
         </div>
 
         {/* NPM Publishing Options */}
-        <div className="bg-surface rounded-lg p-4">
+        <div className="bg-surface hidden rounded-lg p-4">
           <div className="flex items-center space-x-3 mb-3">
             <input
               type="checkbox"
               id="publish-npm"
-              checked={publishToNpm}
+              checked={state?.auto_publish}
               onChange={(e) => setPublishToNpm(e?.target?.checked)}
               className="w-4 h-4 text-primary border-border rounded focus:ring-primary"
             />
@@ -219,7 +220,7 @@ const DownloadManager = ({
           </div>
           
           {publishToNpm && (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+            <div className="grid hidden grid-cols-1 md:grid-cols-3 gap-4 mt-4">
               <div>
                 <label className="block text-xs font-medium text-text-secondary mb-1">
                   Registry URL

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Icon from '../../../components/AppIcon';
 import Button from '../../../components/ui/Button';
+import { generateSDKClass } from 'utils/sdk_generate_js';
 
 const CodePreviewPanel = ({ 
   generatedCode = {}, 
@@ -18,129 +19,39 @@ const CodePreviewPanel = ({
     { value: 'python', label: 'Python', icon: 'FileText' },
   ];
 
+  const fileName = `${state.name}.sol`;
+
   const mockFileStructure = {
     javascript: {
       'package.json': {
-        type: 'file',
+        type: 'module',
         content: `{
-  "name": ${state?.config?.packagePrefix}-${state?.name}-javascript,
-  "version": ${state?.config?.packagePrefix},
+  "name": ${state?.config?.packagePrefix}-${state?.name.toLowerCase()}-javascript,
+  "version": ${state?.config?.initialVersion},
   "description": "Generated SDK for ${state?.name} Contract deployed on Somnia blockchain",
   "main": "index.js",
   "dependencies": {
     "ethers": "^6.0.0",
-    "axios": "^1.0.0"
+    "viem": "^2.0.0"
   }
 }`
       },
       'index.js': {
-        type: 'file',
-        content: `import { ethers } from 'ethers';
-import { ${state?.name} } from './contracts/${state?.name}';
-
-export class ${state?.name} {
-  constructor(provider, ${state?.address}) {
-    this.provider = provider;
-    this.contract = new ${state?.name}(provider, contractAddress);
-  }
-
-  async initialize() {
-    await this.contract.initialize();
-    return this;
-  }
-
-  async getBalance(address) {
-    return await this.contract.getBalance(address);
-  }
-
-  async transfer(to, amount) {
-    return await this.contract.transfer(to, amount);
-  }
-}
-
-export default SomniaSDK;`
+        type:"file",
+        content: generateSDKClass(JSON.parse(state?.abi), state?.address, state?.name, `${state?.config?.packagePrefix}-${state?.name.toLowerCase()}-javascript`)?.indexJs
       },
-      'contracts/': {
+      'contracts': {
         type: 'folder',
         children: {
-          'SomniaContract.js': {
+          [fileName]: {
             type: 'file',
-            content: `import { ethers } from 'ethers';
-
-export class SomniaContract {
-  constructor(provider, address) {
-    this.provider = provider;
-    this.address = address;
-    this.contract = null;
-  }
-
-  async initialize() {
-    const abi = [
-      "function getBalance(address) view returns (uint256)",
-      "function transfer(address, uint256) returns (bool)"
-    ];
-    
-    this.contract = new ethers.Contract(
-      this.address, 
-      abi, 
-      this.provider
-    );
-  }
-
-  async getBalance(address) {
-    return await this.contract.getBalance(address);
-  }
-
-  async transfer(to, amount) {
-    const signer = this.provider.getSigner();
-    const contractWithSigner = this.contract.connect(signer);
-    return await contractWithSigner.transfer(to, amount);
-  }
-}`
+            content: `${state?.code}`
           }
         }
       },
       'README.md': {
-        type: 'file',
-        content: `# Somnia SDK
-
-Generated SDK for interacting with Somnia blockchain contracts.
-
-## Installation
-
-\`\`\`bash
-npm install @somnia/sdk
-\`\`\`
-
-## Usage
-
-\`\`\`javascript
-import SomniaSDK from '@somnia/sdk';
-
-const sdk = new SomniaSDK(provider, contractAddress);
-await sdk.initialize();
-
-const balance = await sdk.getBalance(userAddress);
-console.log('Balance:', balance);
-\`\`\`
-
-## API Reference
-
-### SomniaSDK
-
-#### constructor(provider, contractAddress)
-- \`provider\`: Ethereum provider instance
-- \`contractAddress\`: Contract address on Somnia network
-
-#### initialize()
-Initializes the SDK and contract connections.
-
-#### getBalance(address)
-Returns the balance for the specified address.
-
-#### transfer(to, amount)
-Transfers tokens to the specified address.
-`
+        type:"file",
+        content: generateSDKClass(JSON.parse(state?.abi), state?.address, state?.name, `${state?.config?.packagePrefix}-${state?.name.toLowerCase()}-javascript`)?.readme
       }
     }
   };
@@ -209,16 +120,17 @@ Transfers tokens to the specified address.
     const structure = mockFileStructure?.[selectedLanguage] || {};
     const pathParts = activeFile?.split('/');
     let current = structure;
+    let content;
     
-    for (const part of pathParts) {
-      if (current?.[part]) {
-        current = current?.[part];
-      } else {
+        if ( pathParts.length > 1) {
+          content = current?.contracts?.children?.[pathParts[1]]
+        } else if ( pathParts.length === 1){
+          content = current?.[pathParts[0]];
+        } else {
         return 'File not found';
       }
-    }
     
-    return current?.content || 'No content available';
+    return content?.content || 'No content available';
   };
 
   if (isLoading) {
@@ -238,7 +150,7 @@ Transfers tokens to the specified address.
       <div className="border-b border-border bg-surface">
         <div className="flex items-center justify-between p-4">
           <div className="flex space-x-1">
-            {availableLanguages?.map((lang) => (
+            {availableLanguages?.filter((i) => i.value.toLowerCase() === selectedLanguage.toLowerCase()).map((lang) => (
               <button
                 key={lang?.value}
                 onClick={() => onLanguageChange(lang?.value)}

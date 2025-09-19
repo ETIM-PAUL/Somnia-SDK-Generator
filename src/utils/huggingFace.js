@@ -285,4 +285,75 @@ export async function HuggingFaceContractAnalyzer (code) {
 };
 
 
-// export async function HuggingFaceSDKGeneration
+export async function HuggingFaceSDKGeneration(code, abi) {
+
+  let selectedModel = 'Qwen/Qwen3-32B';
+  let contractCode = code;
+
+
+  const hf = new InferenceClient(import.meta.env.VITE_HUGGINGFACE_API); // or omit if using a public model
+
+  // Hugging Face API call with different endpoints
+  const callHuggingFaceAPI = async (model, prompt, task = 'text-generation') => {
+    const response = await hf.chatCompletion({
+      model: selectedModel,
+      messages: [{ role: "user", content: prompt }],
+      max_tokens: 1500,
+      temperature: 0.1,
+    });
+
+    
+    if (!response.choices) {
+      throw new Error(`API Error (${response})`);
+    }
+
+    const formattedResponse = extractOutermostObject(response.choices[0].message.content);
+    console.log(formattedResponse)
+    return formattedResponse;
+  }
+
+  // Analyze contract structure using code models
+  try {
+    const prompt = `
+
+    You are an expert blockchain developer.
+    Given the following Solidity smart contract ABI, generate a Javascript SDK class
+    that wraps the contract using viem. The class must:
+
+    - Create a public client for read operations.
+    - Create a wallet client for write operations (connect() method).
+    - Include methods for every public and external function in the contract.
+    - Include event listeners and a helper to fetch past events.
+    - Throw meaningful errors when wallet is not connected.
+
+    Now generate the SDK for this Smart contract ABI:
+
+    Smart contract ABI:
+    ${JSON.stringify(abi)}
+
+    
+    Rules:
+    - Don't add your thinking text (<think></think>).
+    - Output only the Javascript code, nothing else..
+    - Only return code. Do not include extra text, markdown, or explanations.
+    - If some fields cannot be determined, use null or an empty array.
+    - Ensure the code is valid and properly formatted.
+    `;
+    
+
+    // Process each chunk separately
+    const result = await callHuggingFaceAPI(selectedModel, prompt, 'text-generation')
+
+
+    return result;
+    
+  } catch (error) {
+    console.error('Analysis error:', error);
+    analysis = (`Error: ${error.message}\n\nFalling back to manual analysis...\n\n${performManualAnalysis(contractCode)}`);
+  }
+
+return {
+  analysis
+}
+
+}

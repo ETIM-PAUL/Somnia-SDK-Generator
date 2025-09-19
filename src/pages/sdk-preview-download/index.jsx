@@ -274,6 +274,7 @@ console.log(state)
             <DownloadManager
               downloadProgress={downloadProgress}
               onDownload={handleDownload}
+              state={state}
               isGenerating={isGenerating}
             />
           )}

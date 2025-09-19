@@ -4,6 +4,11 @@ export const SOMNIA_TESTNET_CONFIG = {
     chainId: 50311,
     name: 'Somnia Testnet',
     rpcUrl: 'https://testnet-rpc.somnia.network',
+    nativeCurrency: {
+      name: 'STT',
+      symbol: 'STT',
+      decimals: 18
+    },
     blockExplorer: 'https://testnet-explorer.somnia.network'
 };
 

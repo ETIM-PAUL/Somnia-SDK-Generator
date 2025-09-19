@@ -9,6 +9,8 @@ import EstimatedCompletion from './components/EstimatedCompletion';
 import Icon from '../../components/AppIcon';
 import Button from '../../components/ui/Button';
 import { ContractContext } from 'context/globalState';
+import { HuggingFaceSDKGeneration } from 'utils/huggingFace';
+import { generateSDKClass } from 'utils/sdk_generate_js';
 
 const SDKGenerationProgress = () => {
   const navigate = useNavigate();
@@ -50,16 +52,7 @@ const SDKGenerationProgress = () => {
     }
   ];
 
-  const contractDetails = {
-    address: "0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8e1",
-    name: "SomniaToken",
-    selectedLanguages: ["JavaScript", "TypeScript", "Python"],
-    customNaming: "@somnia/token-sdk",
-    contractSize: "24.5 KB",
-    verificationStatus: "verified",
-    network: "Somnia Testnet"
-  };
-
+  
   // Simulate progress updates
   useEffect(() => {
     const progressInterval = setInterval(() => {
@@ -104,13 +97,13 @@ const SDKGenerationProgress = () => {
   useEffect(() => {
     const logMessages = [
       { type: 'info', message: 'Starting SDK generation process...', details: 'Initializing generation pipeline' },
-      { type: 'success', message: 'Contract ABI parsed successfully', details: 'Found 15 functions and 8 events' },
+      { type: 'success', message: 'Contract ABI parsed successfully', details: `Found ${state?.functions} functions and ${state?.events} events`},
       { type: 'info', message: 'Analyzing contract structure...', details: 'Detecting interface patterns and dependencies' },
       { type: 'success', message: 'TypeScript interfaces generated', details: 'Created type definitions for all contract methods' },
       { type: 'info', message: 'Applying Somnia optimizations...', details: 'Implementing sub-second finality features' },
-      { type: 'warning', message: 'Large contract detected', details: 'Consider splitting into multiple modules for better performance' },
+    //   { type: 'warning', message: 'Large contract detected', details: 'Consider splitting into multiple modules for better performance' },
       { type: 'success', message: 'JavaScript SDK generated', details: 'Created ES6 modules with full functionality' },
-      { type: 'info', message: 'Generating Python bindings...', details: 'Creating pip-compatible package structure' },
+    //   { type: 'info', message: 'Generating Python bindings...', details: 'Creating pip-compatible package structure' },
       { type: 'success', message: 'Documentation generated', details: 'Created comprehensive API reference and examples' },
       { type: 'info', message: 'Packaging SDK files...', details: 'Creating distribution archives for all languages' },
       { type: 'success', message: 'SDK generation completed successfully', details: 'All packages ready for download' }
