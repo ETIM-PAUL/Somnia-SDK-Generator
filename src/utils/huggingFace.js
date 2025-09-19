@@ -220,7 +220,7 @@ export async function HuggingFaceContractAnalyzer (code) {
       const prompt = `
       You are a smart contract auditor AI.
       
-      Analyze this Solidity smart contract:
+      Analyze this Solidity smart contract deployed on Somnia testnet:
       
       ${contractCode}
       
@@ -228,6 +228,7 @@ export async function HuggingFaceContractAnalyzer (code) {
       
       {
         "security_score": number (0-100),
+        "contract_complexity": "low" | "medium" | "high",
         "function_details": [
           {
             "name": string,
@@ -258,6 +259,7 @@ export async function HuggingFaceContractAnalyzer (code) {
       - Don't add your thinking text (<think></think>).
       - Only return JSON. Do not include extra text, markdown, or explanations.
       - If some fields cannot be determined, use null or an empty array.
+      - Use realistic gas estimates for Somnia testnet (assume average L2 gas costs)
       - Ensure the JSON is valid and properly formatted.
       `;
       
@@ -281,3 +283,6 @@ export async function HuggingFaceContractAnalyzer (code) {
     analysis
   }
 };
+
+
+// export async function HuggingFaceSDKGeneration

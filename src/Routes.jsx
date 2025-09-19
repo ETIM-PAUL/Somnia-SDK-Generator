@@ -7,6 +7,7 @@ import ContractInputDashboard from './pages/contract-input-dashboard';
 import SDKConfiguration from './pages/sdk-configuration';
 import { ContractProvider } from "context/globalState";
 import SDKGenerationProgress from "pages/sdk-generation-progress";
+import SDKPreviewAndDownload from "pages/sdk-preview-download";
 
 const Routes = () => {
   return (
@@ -19,7 +20,7 @@ const Routes = () => {
         <Route path="/" element={<ContractInputDashboard />} />
         <Route path="/sdk-configuration" element={<SDKConfiguration />} />
         <Route path="/sdk-generation" element={<SDKGenerationProgress />} />
-        <Route path="/sdk-preview-and-download" element={<SDKGenerationProgress />} />
+        <Route path="/sdk-preview-and-download" element={<SDKPreviewAndDownload />} />
         <Route path="*" element={<NotFound />} />
       </RouterRoutes>
       </ErrorBoundary>

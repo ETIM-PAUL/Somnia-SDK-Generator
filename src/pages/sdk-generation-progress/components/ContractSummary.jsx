@@ -6,10 +6,7 @@ const ContractSummary = ({ contractDetails }) => {
     address,
     name,
     selectedLanguages,
-    customNaming,
-    contractSize,
-    verificationStatus,
-    network
+    size,
   } = contractDetails;
 
   const getLanguageIcon = (language) => {
@@ -20,10 +17,6 @@ const ContractSummary = ({ contractDetails }) => {
         return 'FileCode';
       case 'python':
         return 'Package';
-      case 'go':
-        return 'FileCode';
-      case 'rust':
-        return 'FileText';
       default:
         return 'Code2';
     }
@@ -47,15 +40,13 @@ const ContractSummary = ({ contractDetails }) => {
             <Icon name="Hash" size={16} color="var(--color-text-secondary)" />
             <div>
               <p className="text-sm font-medium text-foreground">Contract Address</p>
-              <p className="text-xs text-text-secondary font-mono">{address}</p>
+              <p className="text-xs text-text-secondary font-mono">{address.slice(0,4) + "..."}</p>
             </div>
           </div>
           <div className="flex items-center space-x-2">
-            <div className={`w-2 h-2 rounded-full ${
-              verificationStatus === 'verified' ? 'bg-success' : 'bg-warning'
-            }`} />
+            <div className={`w-2 h-2 rounded-full bg-success`} />
             <span className="text-xs text-text-secondary capitalize">
-              {verificationStatus}
+              True
             </span>
           </div>
         </div>
@@ -75,7 +66,7 @@ const ContractSummary = ({ contractDetails }) => {
               <Icon name="Globe" size={16} color="var(--color-text-secondary)" />
               <span className="text-sm font-medium text-foreground">Network</span>
             </div>
-            <p className="text-sm text-text-secondary">{network}</p>
+            <p className="text-sm text-text-secondary">Somnia Testnet</p>
           </div>
 
           <div className="p-3 bg-surface rounded-lg">
@@ -83,7 +74,7 @@ const ContractSummary = ({ contractDetails }) => {
               <Icon name="HardDrive" size={16} color="var(--color-text-secondary)" />
               <span className="text-sm font-medium text-foreground">Contract Size</span>
             </div>
-            <p className="text-sm text-text-secondary">{contractSize}</p>
+            <p className="text-sm text-text-secondary">{size}</p>
           </div>
 
           <div className="p-3 bg-surface rounded-lg">
@@ -91,7 +82,7 @@ const ContractSummary = ({ contractDetails }) => {
               <Icon name="Package" size={16} color="var(--color-text-secondary)" />
               <span className="text-sm font-medium text-foreground">Package Name</span>
             </div>
-            <p className="text-sm text-text-secondary">{customNaming}</p>
+            <p className="text-sm text-text-secondary">{contractDetails?.config?.packagePrefix}-{contractDetails?.name.toLowerCase()}</p>
           </div>
         </div>
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../../components/ui/Header';
 import ProgressSteps from './components/ProgressSteps';
@@ -8,6 +8,7 @@ import ActivityLogs from './components/ActivityLogs';
 import EstimatedCompletion from './components/EstimatedCompletion';
 import Icon from '../../components/AppIcon';
 import Button from '../../components/ui/Button';
+import { ContractContext } from 'context/globalState';
 
 const SDKGenerationProgress = () => {
   const navigate = useNavigate();
@@ -18,7 +19,9 @@ const SDKGenerationProgress = () => {
   const [isLogsExpanded, setIsLogsExpanded] = useState(false);
   const [startTime] = useState(new Date());
   const [estimatedTime, setEstimatedTime] = useState(180); // 3 minutes
+  const { state, dispatch } = useContext(ContractContext);
 
+  console.log("state", state)
   const steps = [
     {
       name: "Analysis",
@@ -85,9 +88,9 @@ const SDKGenerationProgress = () => {
           clearInterval(progressInterval);
           
           // Navigate to preview page after completion
-          setTimeout(() => {
-            navigate('/sdk-preview-and-download');
-          }, 2000);
+        //   setTimeout(() => {
+        //     navigate('/sdk-preview-and-download');
+        //   }, 2000);
         }
         
         return newProgress;
@@ -186,14 +189,14 @@ const SDKGenerationProgress = () => {
           {/* Right Column - Contract Summary and Time Estimates */}
           <div className="space-y-6">
             {/* Contract Summary */}
-            <ContractSummary contractDetails={contractDetails} />
+            <ContractSummary contractDetails={state} />
 
             {/* Estimated Completion */}
             <EstimatedCompletion 
               startTime={startTime}
               estimatedDuration={180}
               currentProgress={progress}
-              contractComplexity="medium"
+              contractComplexity={state?.analysis?.contract_complexity}
             />
 
             {/* Process Information */}

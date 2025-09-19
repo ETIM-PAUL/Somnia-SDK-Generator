@@ -19,7 +19,19 @@ const Header = () => {
       path: '/sdk-configuration',
       icon: 'Settings',
       description: 'Language selection and generation parameters'
-    }
+    },
+    {
+      name: 'SDK Generation',
+      path: '/sdk-generation-progress',
+      icon: 'Activity',
+      tooltip: 'Monitor SDK generation progress'
+    },
+    {
+      name: 'Preview & Download',
+      path: '/sdk-preview-and-download',
+      icon: 'Download',
+      tooltip: 'Review and download generated SDK'
+    },
   ];
 
   const isActivePath = (path) => {
