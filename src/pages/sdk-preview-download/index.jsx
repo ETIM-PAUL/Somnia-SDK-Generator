@@ -9,6 +9,9 @@ import DownloadManager from './components/DownloadManager';
 import NotificationToast, { useNotifications } from '../../components/ui/NotificationToast';
 import DocumentationPreview from './components/DocumentationPreview';
 import { ContractContext } from 'context/globalState';
+import JSZip from "jszip";
+import { saveAs } from "file-saver";
+import { generateSDKClass } from 'utils/sdk_generate_js';
 
 const SDKPreviewAndDownload = () => {
   const location = useLocation();
@@ -16,13 +19,12 @@ const SDKPreviewAndDownload = () => {
   const { state, dispatch } = useContext(ContractContext);
 
   const { notifications, addNotification, removeNotification, success, error, warning } = useNotifications();
-console.log(state)
   // State management
   const [activeTab, setActiveTab] = useState('code-preview');
   const [selectedLanguage, setSelectedLanguage] = useState('javascript');
   const [downloadProgress, setDownloadProgress] = useState({});
   const [isGenerating, setIsGenerating] = useState(false);
-  const [generationComplete, setGenerationComplete] = useState(true);
+  const [generatedFiles, setGeneratedFiles] = useState(null);
   const [npmPublishConfig, setNpmPublishConfig] = useState({
     enabled: false,
     registry: 'https://registry.npmjs.org',
@@ -89,6 +91,43 @@ console.log(state)
   const handleDownload = async (packages, config) => {
     setIsGenerating(true);
     
+    const fileName = `${state.name}.sol`;
+    const packageName = `${state?.config?.packagePrefix}-${state?.name.toLowerCase()}-javascript.zip`;
+    const generatedSDKFileStructure = {
+        javascript: {
+          'package.json': {
+            type: 'module',
+            content: `{
+      "name": ${state?.config?.packagePrefix}-${state?.name.toLowerCase()}-javascript,
+      "version": ${state?.config?.initialVersion},
+      "description": "Generated SDK for ${state?.name} Contract deployed on Somnia blockchain",
+      "main": "index.js",
+      "dependencies": {
+        "ethers": "^6.0.0",
+        "viem": "^2.0.0"
+      }
+    }`
+          },
+          'index.js': {
+            type:"file",
+            content: generateSDKClass(JSON.parse(state?.abi), state?.address, state?.name, `${state?.config?.packagePrefix}-${state?.name.toLowerCase()}-javascript`)?.indexJs
+          },
+          'contracts': {
+            type: 'folder',
+            children: {
+              [fileName]: {
+                type: 'file',
+                content: `${state?.code}`
+              }
+            }
+          },
+          'README.md': {
+            type:"file",
+            content: generateSDKClass(JSON.parse(state?.abi), state?.address, state?.name, `${state?.config?.packagePrefix}-${state?.name.toLowerCase()}-javascript`)?.readme
+          }
+        }
+      };
+    
     try {
       // Simulate download process
       for (const pkg of packages) {
@@ -105,6 +144,28 @@ console.log(state)
             [pkg?.id]: { status: 'downloading', progress: i }
           }));
         }
+
+        const zip = new JSZip();
+
+        // --- Build the folder structure like in your screenshot ---
+        zip.file("package.json", `{
+        "name": "my-sdk",
+        "version": "1.0.0",
+        "main": "index.js"
+        }`);
+    
+        zip.file("index.js", generatedSDKFileStructure?.javascript?.['index.js']?.content);
+    
+        const contracts = zip.folder("contracts");
+        contracts.file("SomniaContract.js",  generatedSDKFileStructure?.javascript?.['contracts']?.children?.[fileName]?.content);
+    
+        zip.file("README.md", generatedSDKFileStructure?.javascript?.['README.md']?.content);
+    
+        // --- Generate the zip file ---
+        const content = await zip.generateAsync({ type: "blob" });
+    
+        // --- Trigger browser download ---
+        saveAs(content, packageName);
 
         setDownloadProgress(prev => ({
           ...prev,

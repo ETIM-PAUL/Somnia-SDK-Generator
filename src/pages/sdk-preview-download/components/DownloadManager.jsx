@@ -48,16 +48,16 @@ const DownloadManager = ({
     //   language: 'python',
     //   files: ['setup.py', 'somnia_sdk/', 'README.md', 'requirements.txt']
     // },
-    {
-      id: 'documentation',
-      name: 'Documentation',
-      description: 'Complete API documentation and examples',
-      format: 'zip',
-      size: 'proposed size - 5.2 MB',
-      icon: 'BookOpen',
-      language: 'markdown',
-      files: ['docs/', 'examples/', 'README.md']
-    }
+    // {
+    //   id: 'documentation',
+    //   name: 'Documentation',
+    //   description: 'Complete API documentation and examples',
+    //   format: 'zip',
+    //   size: 'proposed size - 5.2 MB',
+    //   icon: 'BookOpen',
+    //   language: 'markdown',
+    //   files: ['docs/', 'examples/', 'README.md']
+    // }
   ];
 
   const packages = availablePackages?.length > 0 ? availablePackages : defaultPackages;

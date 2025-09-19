@@ -8,7 +8,7 @@ const CodePreviewPanel = ({
   state,
   selectedLanguage = 'javascript',
   onLanguageChange = () => {},
-  isLoading = false 
+  isLoading = false
 }) => {
   const [expandedFiles, setExpandedFiles] = useState(new Set(['index.js']));
   const [activeFile, setActiveFile] = useState('index.js');
@@ -21,7 +21,7 @@ const CodePreviewPanel = ({
 
   const fileName = `${state.name}.sol`;
 
-  const mockFileStructure = {
+  const generatedSDKFileStructure = {
     javascript: {
       'package.json': {
         type: 'module',
@@ -55,6 +55,7 @@ const CodePreviewPanel = ({
       }
     }
   };
+
 
   const toggleFileExpansion = (filePath) => {
     const newExpanded = new Set(expandedFiles);
@@ -117,7 +118,7 @@ const CodePreviewPanel = ({
   };
 
   const getActiveFileContent = () => {
-    const structure = mockFileStructure?.[selectedLanguage] || {};
+    const structure = generatedSDKFileStructure?.[selectedLanguage] || {};
     const pathParts = activeFile?.split('/');
     let current = structure;
     let content;
@@ -178,7 +179,7 @@ const CodePreviewPanel = ({
             <span>Project Files</span>
           </h4>
           <div className="space-y-1">
-            {renderFileTree(mockFileStructure?.[selectedLanguage] || {})}
+            {renderFileTree(generatedSDKFileStructure?.[selectedLanguage] || {})}
           </div>
         </div>
 
